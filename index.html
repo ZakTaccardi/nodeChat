@@ -3,12 +3,28 @@
 <title>nowjs test</title>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
 <script type="text/javascript" src="nowjs/now.js"></script>
+
+<script>
+var mongoose = require('mongoose/').Mongoose,
+    db = mongoose.connect('mongodb://localhost/test'),
+    Collection = mongoose.noSchema('chat',db); // collection name
+
+Collection.find({}).each(function(doc){
+//need to figure out how to grab what was returned and export it to page
+ 
+});
+
+
+</script>
+
+
+
 <script>
   $(function(){
 	now.name = prompt("What's your name?", "");
 	now.receiveMessage = function(name, msg){
 	$("<div></div>").text(name + ": " + msg).appendTo("#msg");
-	};
+	};	
 	$("#send-button").click(function(){
 	now.distributeMessage($("#text-input").val());
 	$("#text-input").val("");
