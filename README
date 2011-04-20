@@ -1,0 +1,9 @@
+I ran the below comments in the mongoDB shell to create a small database
+
+//inserts a record into the database
+db.chat.save({"name": "Zak", "msg": "Hey greg, why are you so greggish?"})
+db.chat.save({"name": "Greg", "msg": "I don't know zak, I just am"});
+
+
+//returns everything in the database
+db.chat.find();
