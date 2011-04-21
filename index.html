@@ -1,41 +1,136 @@
 <html>
 <head>
+<style>
+#name
+{
+text-decoration:bold;
+font-size:24px;
+font-family:Georgia;
+}
+
+.textbox {
+        background-color:#FFFFFF;
+        background-repeat: no-repeat;
+        background-position:left;
+        width:270px;
+        font:normal 16px Arial;
+        height:35px;
+        color: #787878;
+        padding:3px 5px 3px 19px;
+        border:1px solid black;
+        margin-left:0px;
+        margin-top:8px;
+}
+
+.buttons {
+        background:black;
+        font-size:12px;
+        color: #fff;
+        padding: 6px 14px;
+        border-width: 2px;
+        border-style: solid;
+        border-color: #fff #d8d8d0 #d8d8d0 #fff;
+        text-decoration: none;
+        text-transform:uppercase;
+        font-weight:bold;
+}
+
+.buttons:hover {
+        cursor:pointer;
+        opacity:.8;
+}
+
+.button_div {
+        width:287px;
+        float:left;
+        text-align:left;
+        height:35px;
+        margin-top:3px;
+        padding:5px 32px 3px;
+        margin-left:115px;
+}
+</style>
 <title>nowjs test</title>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
 <script type="text/javascript" src="nowjs/now.js"></script>
-
-<script>
-var mongoose = require('mongoose/').Mongoose,
-    db = mongoose.connect('mongodb://localhost/test'),
-    Collection = mongoose.noSchema('chat',db); // collection name
-
-Collection.find({}).each(function(doc){
-//need to figure out how to grab what was returned and export it to page
- 
-});
-
-
-</script>
-
-
-
 <script>
   $(function(){
-	now.name = prompt("What's your name?", "");
+  
+	var name = prompt("What's your first name?", "");
+	name = name.replace(/ /g,"_");
+	$("#online").prepend("<span id = 'name'>Hello, "+ name + "<br /><br /></span>").addClass("name");
+	$("body").mouseover(function(){
+	now.distributeAlert(name);
+	});
+	
+	$("body").one("mouseover", function(){
+	now.printDatabase();
+	});
+	
+	now.peopleOnline = function(name){
+		addPeople(name);
+	};
+	
 	now.receiveMessage = function(name, msg){
 	$("<div></div>").text(name + ": " + msg).appendTo("#msg");
 	};	
-	$("#send-button").click(function(){
-	now.distributeMessage($("#text-input").val());
+	$("#chatForm").submit(function(){
+	now.distributeMessage(name,$("#text-input").val());
+	now.saveDB(name, $("#text-input").val());
 	$("#text-input").val("");
-});
+	return false;
+	});
+	
+	//A user closes the browser window
+	$(window).unload(function() {
+	//Call the leaving function on the server
+	now.leaving(name);
+	});
+	
+	now.removeUsers = function(name){
+		removePeople(name);
+	};
+	
+	now.printData = function(name, body){
+		$("#msg").append("<b>"+ name+ "</b>: "+ body +"<br />");
+		
+	};
 });
 </script>
 </head>
 
 <body>
-<div id="msg"></div>
-<input type="text" id="text-input">
-<input type="button" value="Send" id="send-button">
+<div id = "right" style="float:left;width:400px;border:1px solid dashed">
+<div id="online">People Online</div>
+</div>
+<div id = "left" style="float:left;width:400px;">
+<form id = "chatForm">
+
+<input type="text" id="text-input" class="textbox" />
+<input type="submit" value="Send Message" id="send-button" class="buttons">
+
+</form>
+<div id="msg" style="width:400px;height:500px;overflow:scroll;border: 1px solid black"></div>
+</div>
+
+<script type="text/javascript">
+function addPeople(person)
+{
+var personToAdd = "#"+ person;
+if($(personToAdd).length > 0)
+{
+}
+else
+{
+$("#right").append("<div style='float:left;' id="+ person +"><br /><br />&nbsp;&nbsp;&nbsp;&nbsp;"+ person +"<img src = 'http://timemap.googlecode.com/svn/tags/2.0/images/green-circle.png' style='margin-bottom:-3px;float:left;' /></div><br /><br /><br />");
+}
+}
+
+function removePeople(person)
+{
+var personToRemove = "#"+ person;
+$(personToRemove).hide();
+}
+</script>
 </body>
 </html>

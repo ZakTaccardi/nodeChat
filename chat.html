@@ -1,0 +1,47 @@
+<html>
+<head>
+<title>nowjs test</title>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+<script type="text/javascript" src="nowjs/now.js"></script>
+<script>
+  $(function(){
+  
+	now.name = prompt("What's your name?", "");
+	var name = now.name;
+	
+	$("body").one("mouseover",function(){
+	now.distributeAlert();
+	});
+	now.peopleOnline = function(name){
+		addPeople(name);
+	};
+	
+	now.receiveMessage = function(name, msg){
+	$("<div></div>").text(name + ": " + msg).appendTo("#msg");
+	};
+	$("#send-button").click(function(){
+	now.distributeMessage($("#text-input").val());
+	$("#text-input").val("");
+});
+});
+</script>
+</head>
+
+<body>
+First Name<input type="text" id="textName">
+<br /><br /><br />
+<input type="button" value="Enter Chat Room" id="enter">
+<div id="msg"></div>
+<input type="text" id="text-input">
+<input type="button" value="Send" id="send-button">
+<br /><br /><br />
+<div id="online">People Online</div>
+
+<script type="text/javascript">
+function addPeople(person)
+{
+$("body").append("<br />"+person);
+}
+</script>
+</body>
+</html>
